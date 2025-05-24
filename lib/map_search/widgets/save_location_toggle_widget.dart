@@ -33,35 +33,35 @@ class _SaveLocationToggleWidgetState extends State<SaveLocationToggleWidget> {
           alignment: Alignment.centerLeft,
           child: Platform.isIOS
               ? CupertinoSwitch(
-                  activeColor: AppColors.primary,
-                  value: widget.value,
-                  onChanged: widget.onTap,
-                  trackOutlineWidth: const WidgetStatePropertyAll(0),
-                  inactiveThumbColor: AppColors.background,
-                  inactiveTrackColor: AppColors.color999999,
-                  thumbIcon: const WidgetStatePropertyAll(
-                    Icon(
-                      Icons.check,
-                      color: Colors.white,
-                    ),
-                  ),
-                )
+            activeColor: AppColors.primary,
+            value: widget.value,
+            onChanged: widget.onTap,
+            trackOutlineWidth: WidgetStatePropertyAll(0),
+            inactiveThumbColor: AppColors.background,
+            inactiveTrackColor: AppColors.color999999,
+            thumbIcon: WidgetStatePropertyAll(
+              const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+            ),
+          )
               : Switch(
-                  activeTrackColor: AppColors.primary,
-                  activeColor: AppColors.background,
-                  inactiveThumbColor: AppColors.background,
-                  value: widget.value,
-                  onChanged: widget.onTap,
-                  trackOutlineWidth: const WidgetStatePropertyAll(0),
-                  inactiveTrackColor: AppColors.color999999,
-                  padding: EdgeInsets.zero,
-                  thumbIcon: const WidgetStatePropertyAll(
-                    Icon(
-                      Icons.check,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+            activeTrackColor: AppColors.primary,
+            activeColor: AppColors.background,
+            inactiveThumbColor: AppColors.background,
+            value: widget.value,
+            onChanged: widget.onTap,
+            trackOutlineWidth: WidgetStatePropertyAll(0),
+            inactiveTrackColor: AppColors.color999999,
+            padding: EdgeInsets.zero,
+            thumbIcon: WidgetStatePropertyAll(
+              const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+            ),
+          ),
         ),
       ),
     );
