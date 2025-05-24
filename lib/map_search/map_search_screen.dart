@@ -9,6 +9,7 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:map_search_places/constants/app_constants.dart';
 import 'package:map_search_places/map_search/widgets/bottom_content_widget.dart';
 import 'package:map_search_places/map_search/widgets/header_widget.dart';
+import 'package:map_search_places/theme/app_colors.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class Relationship {
@@ -88,7 +89,22 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                       position: LatLng(argument.latitude, argument.longitude),
                     ),
                   );
-                  setState(() {});
+                  _changeLocation(
+                      10, LatLng(argument.latitude, argument.longitude));
+
+                  setState(() async {
+                    List<Placemark> placemarks = await placemarkFromCoordinates(
+                      argument.latitude ?? 23,
+                      argument.longitude ?? 47,
+                    );
+
+                    Placemark place = placemarks.first;
+
+                    String fullAddress =
+                        ' ${place.locality}, ${place.administrativeArea}, ${place.country}';
+                    // setState(() {
+                    _addressController.text = fullAddress;
+                  });
                 },
                 markers: markers,
                 // mapType: MapType.terrain,
@@ -100,7 +116,8 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                 child: HeaderWidget(
                   predictions: _predictions,
                   searchController: _searchController,
-                  getPredictions: (value) {
+                  getPredictions: (value) async {
+                    await Future.delayed(const Duration(seconds: 2));
                     _addressController.text = value;
                     _getPredictions(value).then((predictionsList) {
                       debugPrint('Predictions: $predictionsList');
@@ -186,6 +203,31 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                   },
                 ),
               ),
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.3,
+                left: 0,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    shape: const CircleBorder(),
+                  ),
+                  onPressed: () {
+                    _determinePosition(context).then((value) {
+                      if (value != null) {
+                        _changeLocation(
+                          13,
+                          LatLng(value.latitude, value.longitude),
+                        );
+                      }
+                    });
+                  },
+                  child: const Icon(
+                    Icons.my_location,
+                    color: AppColors.background,
+                    size: 24,
+                  ),
+                ),
+              )
             ],
           ),
         ),
@@ -225,19 +267,25 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
   }
 
   void _mapPreProcessing() async {
-    Position? currentPosition = await _determinePosition(context);
-    _setCurrentLocation(
-      LatLng(
-        currentPosition?.latitude ?? 23,
-        currentPosition?.longitude ?? 47,
-      ),
-    );
-    _addMarkerToMap(
-      LatLng(
-        currentPosition?.latitude ?? 23,
-        currentPosition?.longitude ?? 47,
-      ),
-    );
+    try {
+      Position? currentPosition = await _determinePosition(context);
+      _setCurrentLocation(
+        LatLng(
+          currentPosition?.latitude ?? 23,
+          currentPosition?.longitude ?? 47,
+        ),
+      );
+      _addMarkerToMap(
+        LatLng(
+          currentPosition?.latitude ?? 23,
+          currentPosition?.longitude ?? 47,
+        ),
+      );
+    } catch (e) {
+      _setCurrentLocation(LatLng(23, 47));
+      _addMarkerToMap(LatLng(23, 47));
+      _changeLocation(10, LatLng(23, 47));
+    }
   }
 
   Future<List<Prediction>> _getPredictions(String query) async {
