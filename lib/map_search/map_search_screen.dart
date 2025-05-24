@@ -90,7 +90,9 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                     ),
                   );
                   _changeLocation(
-                      10, LatLng(argument.latitude, argument.longitude));
+                    10,
+                    LatLng(argument.latitude, argument.longitude),
+                  );
 
                   setState(() async {
                     List<Placemark> placemarks = await placemarkFromCoordinates(
