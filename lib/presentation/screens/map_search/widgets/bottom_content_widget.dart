@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:map_search_places/map_search/map_search_screen.dart';
-import 'package:map_search_places/map_search/widgets/save_location_toggle_widget.dart';
+import 'package:map_search_places/presentation/screens/map_search/map_search_screen.dart';
+ import 'package:map_search_places/generated/l10n.dart';
+import 'package:map_search_places/presentation/screens/map_search/map_search_screen.dart';
+import 'package:map_search_places/presentation/screens/map_search/widgets/save_location_toggle_widget.dart';
 import 'package:map_search_places/theme/app_colors.dart';
 
 class BottomContentWidget extends StatelessWidget {
@@ -57,9 +59,9 @@ class BottomContentWidget extends StatelessWidget {
                   color: AppColors.color999999,
                   margin: const EdgeInsets.only(bottom: 10, top: 6),
                 ),
-                const Text(
-                  "detailsYourLocation",
-                  style: TextStyle(
+                Text(
+                  S.of(context).detailsYourLocation,
+                  style: const TextStyle(
                     fontSize: 14,
                   ),
                 ),
@@ -73,9 +75,9 @@ class BottomContentWidget extends StatelessWidget {
             color: AppColors.color999999.withOpacity(0.5),
           ),
           const SizedBox(height: 8),
-          const Text(
-            "location",
-            style: TextStyle(
+          Text(
+            S.of(context).location,
+            style: const TextStyle(
               fontSize: 14,
             ),
           ),
@@ -89,7 +91,7 @@ class BottomContentWidget extends StatelessWidget {
                 suffixIcon: const Icon(Icons.location_pin),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
-                  borderSide: const BorderSide(
+                  borderSide: BorderSide(
                     color: AppColors.color999999,
                     width: 0.005,
                   ),
@@ -100,9 +102,9 @@ class BottomContentWidget extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              const Text(
-                "wantToSaveThisLocation",
-                style: TextStyle(fontSize: 14),
+              Text(
+                S.of(context).wantToSaveThisLocation,
+                style: const TextStyle(fontSize: 14),
               ),
               const Spacer(),
               if (currentPosition != null)
@@ -118,13 +120,13 @@ class BottomContentWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _locationTag( "home", 0, Icons.home,
+              _locationTag(S.of(context).home, 0, Icons.home,
                   isSelected: relationshipIndex == 0),
-              _locationTag( "work", 1, Icons.work,
+              _locationTag(S.of(context).work, 1, Icons.work,
                   isSelected: relationshipIndex == 1),
-              _locationTag( "friend", 2, Icons.person,
+              _locationTag(S.of(context).friend, 2, Icons.person,
                   isSelected: relationshipIndex == 2),
-              _locationTag( "restaurant", 3, Icons.restaurant,
+              _locationTag(S.of(context).restaurant, 3, Icons.restaurant,
                   isSelected: relationshipIndex == 3),
             ],
           ),
@@ -146,9 +148,9 @@ class BottomContentWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(25),
               ),
             ),
-            child: const Text(
-              "continue",
-              style: TextStyle(
+            child: Text(
+              S.of(context).continues,
+              style: const TextStyle(
                 fontSize: 18,
                 color: Colors.white,
               ),

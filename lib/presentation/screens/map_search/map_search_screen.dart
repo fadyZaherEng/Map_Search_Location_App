@@ -7,8 +7,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:map_search_places/constants/app_constants.dart';
-import 'package:map_search_places/map_search/widgets/bottom_content_widget.dart';
-import 'package:map_search_places/map_search/widgets/header_widget.dart';
+import 'package:map_search_places/generated/l10n.dart';
+import 'package:map_search_places/presentation/screens/map_search/widgets/bottom_content_widget.dart';
+import 'package:map_search_places/presentation/screens/map_search/widgets/header_widget.dart';
 import 'package:map_search_places/theme/app_colors.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -42,6 +43,7 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
   bool _isSaveLocation = false;
   List<Relationship> _relationshipList = [];
   int _selectedRelationship = 0;
+  bool _isSearch = true;
 
   @override
   void initState() {
@@ -54,10 +56,10 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _relationshipList = [
-      Relationship(id: 1, name: "home"),
-      Relationship(id: 2, name: "work"),
-      Relationship(id: 3, name: "friend"),
-      Relationship(id: 4, name: "restaurant"),
+      Relationship(id: 1, name: S.of(context).home),
+      Relationship(id: 2, name: S.of(context).work),
+      Relationship(id: 3, name: S.of(context).friend),
+      Relationship(id: 4, name: S.of(context).restaurant),
     ];
   }
 
@@ -90,22 +92,11 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                     ),
                   );
                   _changeLocation(
-                    10,
-                    LatLng(argument.latitude, argument.longitude),
-                  );
+                      10, LatLng(argument.latitude, argument.longitude));
 
-                  setState(() async {
-                    List<Placemark> placemarks = await placemarkFromCoordinates(
-                      argument.latitude ?? 23,
-                      argument.longitude ?? 47,
-                    );
-
-                    Placemark place = placemarks.first;
-
-                    String fullAddress =
-                        ' ${place.locality}, ${place.administrativeArea}, ${place.country}';
-                    // setState(() {
-                    _addressController.text = fullAddress;
+                  setState(() {
+                    _setAddress(
+                        argument.latitude ?? 23, argument.longitude ?? 47);
                   });
                 },
                 markers: markers,
@@ -119,14 +110,20 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
                   predictions: _predictions,
                   searchController: _searchController,
                   getPredictions: (value) async {
-                    await Future.delayed(const Duration(seconds: 2));
-                    _addressController.text = value;
-                    _getPredictions(value).then((predictionsList) {
-                      debugPrint('Predictions: $predictionsList');
-                      setState(() {
-                        _predictions = predictionsList;
+                    if (_isSearch) {
+                      _isSearch = false;
+                      _addressController.text = value;
+                      _getPredictions(value).then((predictionsList) {
+                        debugPrint('Predictions: $predictionsList');
+                        setState(() {
+                          _predictions = predictionsList;
+                        });
                       });
-                    });
+                      Future.delayed(const Duration(milliseconds: 1300))
+                          .then((value) {
+                        _isSearch = true;
+                      });
+                    }
                   },
                   clearSearch: () {
                     _searchController.clear();
@@ -338,16 +335,22 @@ class _MapSearchScreenState extends State<MapSearchScreen> {
 
     Position position = await Geolocator.getCurrentPosition();
     // ✅ Get address from coordinates
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
+    _setAddress(position.latitude, position.longitude);
+
+    return position;
+  }
+
+  void _setAddress(double latitude, double longitude) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      latitude,
+      longitude,
+    );
 
     Placemark place = placemarks.first;
 
     String fullAddress =
         ' ${place.locality}, ${place.administrativeArea}, ${place.country}';
-    // setState(() {
     _addressController.text = fullAddress;
-    // });
-    return position;
+    setState(() {});
   }
 }

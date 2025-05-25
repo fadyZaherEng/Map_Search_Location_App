@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:map_search_places/map_search/map_search_screen.dart';
+import 'package:map_search_places/presentation/screens/map_search/map_search_screen.dart';
 import 'package:map_search_places/theme/app_colors.dart';
 
 void main() async {

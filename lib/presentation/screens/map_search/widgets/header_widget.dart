@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_webservice/places.dart';
+import 'package:map_search_places/generated/l10n.dart';
 import 'package:map_search_places/theme/app_colors.dart';
 
 class HeaderWidget extends StatelessWidget {
   final List<Prediction> predictions;
-
   final TextEditingController searchController;
-
   final void Function(String query) getPredictions;
   final void Function() clearSearch;
 
@@ -21,12 +20,17 @@ class HeaderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Text(
-          "yourLocation",
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black,
+        Center(
+          child: Text(
+            S.of(context).yourLocation,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+            ),
           ),
         ),
         const SizedBox(height: 10),
@@ -34,7 +38,7 @@ class HeaderWidget extends StatelessWidget {
           controller: searchController,
           onChanged: (value) => getPredictions(value),
           decoration: InputDecoration(
-            hintText: "searchAboutYourLocation",
+            hintText: S.of(context).searchAboutYourLocation,
             hintStyle: const TextStyle(
               fontSize: 14,
               color: AppColors.color999999,
